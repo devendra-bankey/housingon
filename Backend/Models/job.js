@@ -13,6 +13,28 @@ const jobSchema = new Schema({
     type: String,
     required: true,
   },
+  completionDate: {
+    type: Date,
+    required: true,
+  },
+  assignedContractorId: {
+    type: Schema.Types.ObjectId,
+    ref: "user",
+    required: true,
+  },
+  tenant: {
+    name: {
+      type: String,
+      required: true,
+    },
+    phone: {
+      type: String,
+      required: true,
+    },
+    email: {
+      type: String,
+    },
+  },
 });
 
 const Job = mongoose.model("Job", jobSchema);
