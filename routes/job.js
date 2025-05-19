@@ -29,5 +29,6 @@ jobRouter.route("/:id/close").post(authenticateUser);
 jobRouter.route("/:id/open").post(authenticateUser);
 jobRouter.route("/:id/hold").post(authenticateUser);
 jobRouter.route("/:id/archive").post(authenticateUser);
+jobRouter.route("/:id/priority").post(authenticateUser); // change priority [low, medium, high]
 
 export default jobRouter;
