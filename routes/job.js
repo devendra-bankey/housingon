@@ -14,13 +14,13 @@ jobRouter
 
 jobRouter
   .route("/:id")
-  .post(authenticateUser) //single get a job by id
+  .get(authenticateUser) //single get a job by id
   .put(authenticateUser) //single update a job by id
   .delete(authenticateUser); //single delete a job by id
 
 jobRouter
   .route("/:id/status")
-  .post(authenticateUser) // get job status
+  .get(authenticateUser) // get job status
   .patch(authenticateUser); // update job status //patch for single
 
 jobRouter.route("/assign-contractor").post(authenticateUser); // assign a contractor
