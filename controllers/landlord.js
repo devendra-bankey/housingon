@@ -88,7 +88,7 @@ const getTenantByProperty = (req, res) => {
   }
 };
 
-export default {
+export {
   getPropertyById,
   updatePropertyById,
   deletePropertyById,
