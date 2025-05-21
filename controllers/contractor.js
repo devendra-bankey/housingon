@@ -2,52 +2,102 @@
 
 const getAllJobs = (req, res) => {
   // TODO: fetch all jobs assigned to contractor with id req.params.id
-  res.status(200).json({ message: "Get all jobs" });
+  try {
+    res.status(200).json({ message: "" });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Failed to " });
+  }
 };
 
 const createOrUpdateJob = (req, res) => {
   // TODO: create or update job with id req.params.jobId for contractor req.params.id
-  res.status(200).json({ message: "Create or update job" });
+  try {
+    res.status(200).json({ message: "" });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Failed to " });
+  }
 };
 
 const acceptJob = (req, res) => {
   // TODO: mark job as accepted
-  res.status(200).json({ message: "Job accepted" });
+  try {
+    res.status(200).json({ message: "" });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Failed to " });
+  }
 };
 
 const rejectJob = (req, res) => {
   // TODO: mark job as rejected
-  res.status(200).json({ message: "Job rejected" });
+  try {
+    res.status(200).json({ message: "" });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Failed to " });
+  }
 };
 
 const updateVisit = (req, res) => {
   // TODO: update visit details for job
-  res.status(200).json({ message: "Visit updated" });
+  try {
+    res.status(200).json({ message: "" });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Failed to " });
+  }
 };
 
 const scheduleJob = (req, res) => {
   // TODO: schedule job visit
-  res.status(200).json({ message: "Job scheduled" });
+  try {
+    res.status(200).json({ message: "" });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Failed to " });
+  }
 };
 
 const postChatMessage = (req, res) => {
   // TODO: add chat message for job
-  res.status(200).json({ message: "Chat message posted" });
+  try {
+    res.status(200).json({ message: "" });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Failed to " });
+  }
 };
 
 const getChatMessages = (req, res) => {
   // TODO: fetch chat messages for job
-  res.status(200).json({ message: "Chat messages fetched" });
+  try {
+    res.status(200).json({ message: "" });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Failed to " });
+  }
 };
 
 const getNotifications = (req, res) => {
   // TODO: fetch notifications for contractor
-  res.status(200).json({ message: "Notifications fetched" });
+  try {
+    res.status(200).json({ message: "" });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Failed to " });
+  }
 };
 
 const getEditProfile = (req, res) => {
   // TODO: fetch contractor profile details for editing
-  res.status(200).json({ message: "Profile data fetched" });
+  try {
+    res.status(200).json({ message: "" });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Failed to " });
+  }
 };
 
 const addQuotation = async (req, res) => {
@@ -55,11 +105,21 @@ const addQuotation = async (req, res) => {
 };
 
 const getQuotation = async (req, res) => {
-  res.status(200).json({ message: "Quotation fetched" });
+  try {
+    res.status(200).json({ message: "" });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Failed to " });
+  }
 };
 
 const updateQuotation = async (req, res) => {
-  res.status(200).json({ message: "Quotation updated" });
+  try {
+    res.status(200).json({ message: "" });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Failed to " });
+  }
 };
 
 const addInvoice = async (req, res) => {
@@ -67,7 +127,12 @@ const addInvoice = async (req, res) => {
 };
 
 const getInvoice = async (req, res) => {
-  res.status(200).json({ message: "Invoice fetched" });
+  try {
+    res.status(200).json({ message: "" });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Failed to " });
+  }
 };
 
 const addJobAttachments = async (req, res) => {
@@ -75,7 +140,12 @@ const addJobAttachments = async (req, res) => {
 };
 
 const getJobAttachments = async (req, res) => {
-  res.status(200).json({ message: "Attachments fetched" });
+  try {
+    res.status(200).json({ message: "" });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Failed to " });
+  }
 };
 
 const addPreJobAttachments = async (req, res) => {
@@ -83,7 +153,12 @@ const addPreJobAttachments = async (req, res) => {
 };
 
 const getPreJobAttachments = async (req, res) => {
-  res.status(200).json({ message: "Pre-job attachments fetched" });
+  try {
+    res.status(200).json({ message: "" });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Failed to " });
+  }
 };
 
 const addPostJobAttachments = async (req, res) => {
@@ -91,7 +166,12 @@ const addPostJobAttachments = async (req, res) => {
 };
 
 const getPostJobAttachments = async (req, res) => {
-  res.status(200).json({ message: "Post-job attachments fetched" });
+  try {
+    res.status(200).json({ message: "" });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Failed to " });
+  }
 };
 
 export {

@@ -11,13 +11,17 @@ const tenantSchema = new Schema(
     },
     email: {
       type: String,
+      required: true,
+    },
+    loginAccess: {
+      type: Boolean,
+      default: false,
     },
     stayDetails: [
       {
         propertyId: {
           type: Schema.Types.ObjectId,
           ref: "Property",
-          required: true,
         },
         startDate: { type: Date },
         endDate: { type: Date },

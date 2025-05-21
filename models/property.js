@@ -78,4 +78,4 @@ const propertySchema = new Schema({
   newTenantDepositeDoneDate: { type: Date },
 });
 
-export default mongoose.model("Landlord", propertySchema);
+export default mongoose.model("Property", propertySchema);

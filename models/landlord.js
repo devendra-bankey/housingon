@@ -11,6 +11,12 @@ const landlordSchema = new Schema({
   email: {
     type: String,
   },
+  properties: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Property",
+    },
+  ],
 });
 
 export default mongoose.model("Landlord", landlordSchema);
