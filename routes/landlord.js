@@ -1,7 +1,6 @@
 import express from "express";
 const landlordRouter = express.Router();
 import { authenticateUser } from "../middlewares/authMiddleware.js";
-import authenticateUser from "../middleware/authenticateUser.js";
 import {
   getPropertyById,
   updatePropertyById,
@@ -12,7 +11,7 @@ import {
   getAllJobsOnProperty,
   getAllTenants,
   getTenantByProperty,
-} from "../controllers/landlordController.js";
+} from "../controllers/landlord.js";
 
 // add,update,delete,read his properties
 // read tenants data leased his properities
