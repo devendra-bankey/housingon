@@ -1,6 +1,7 @@
 import express from "express";
 const landlordRouter = express.Router();
 import { authenticateUser } from "../middlewares/authMiddleware.js";
+import { Roles, authorizeRoles } from "../middlewares/authorizeRoles.js";
 import {
   getPropertyById,
   updatePropertyById,
@@ -19,24 +20,36 @@ import {
 
 landlordRouter
   .route("/:id/property/:propertyId")
-  .get(authenticateUser, getPropertyById) //get my property by id
-  .put(authenticateUser, updatePropertyById) //update my property by id
-  .delete(authenticateUser, deletePropertyById); //delete my property by id
+  .get(authenticateUser, authorizeRoles(Roles.LANDLORD), getPropertyById) //get my property by id
+  .put(authenticateUser, authorizeRoles(Roles.LANDLORD), updatePropertyById) //update my property by id
+  .delete(authenticateUser, authorizeRoles(Roles.LANDLORD), deletePropertyById); //delete my property by id
 
-landlordRouter.route("/:id/properties").get(authenticateUser, getAllProperties); //get my all properties
+landlordRouter
+  .route("/:id/properties")
+  .get(authenticateUser, authorizeRoles(Roles.LANDLORD), getAllProperties); //get my all properties
 
-landlordRouter.route("/:id/jobs").get(authenticateUser, getAllJobsOnProperties); //get all jobs on my properties
+landlordRouter
+  .route("/:id/jobs")
+  .get(
+    authenticateUser,
+    authorizeRoles(Roles.LANDLORD),
+    getAllJobsOnProperties
+  ); //get all jobs on my properties
 
-landlordRouter.route("/:id/job/:jobId").get(authenticateUser, getJobById); //get a job on my properties using job id
+landlordRouter
+  .route("/:id/job/:jobId")
+  .get(authenticateUser, authorizeRoles(Roles.LANDLORD), getJobById); //get a job on my properties using job id
 
 landlordRouter
   .route("/:id/jobs/:propertyId")
-  .get(authenticateUser, getAllJobsOnProperty); //get all jobs on single property by propertyId
+  .get(authenticateUser, authorizeRoles(Roles.LANDLORD), getAllJobsOnProperty); //get all jobs on single property by propertyId
 
-landlordRouter.route("/:id/tenants").post(authenticateUser, getAllTenants); //get all tenants using landlord id
+landlordRouter
+  .route("/:id/tenants")
+  .post(authenticateUser, authorizeRoles(Roles.LANDLORD), getAllTenants); //get all tenants using landlord id
 
 landlordRouter
   .route("/:id/tenant/:propertyId")
-  .post(authenticateUser, getTenantByProperty); //get tenant on single property by propertyId
+  .post(authenticateUser, authorizeRoles(Roles.LANDLORD), getTenantByProperty); //get tenant on single property by propertyId
 
 export default landlordRouter;
