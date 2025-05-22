@@ -112,84 +112,231 @@ const deleteTenant = async (req, res) => {
 // ===== LANDLORDS =====
 const addLandlord = async (req, res) => {
   try {
-    res.status(200).json({ message: "" });
+    const { fullname, email, phone, loginAccess } = req.body;
+
+    if (!fullname || !email) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+
+    const newUser = new user({
+      fullname,
+      email,
+      phone,
+      loginAccess,
+      role: "landlord",
+    });
+
+    const savedUser = await newUser.save();
+
+    const newLandlord = new landlord({
+      fullname,
+      email,
+      phone,
+      loginAccess,
+      userId: savedUser._id,
+    });
+
+    const savedLandlord = await newLandlord.save();
+
+    res
+      .status(201)
+      .json({ message: "Landlord created", landlord: savedLandlord });
   } catch (err) {
     console.log(err);
-    res.status(500).json({ message: "Failed to " });
+    res.status(500).json({ message: "Failed to create landlord" });
   }
 };
+
 const getLandlordList = async (req, res) => {
   try {
-    res.status(200).json({ message: "" });
+    const landlords = await landlord.find();
+    res.status(200).json({ landlords });
   } catch (err) {
     console.log(err);
-    res.status(500).json({ message: "Failed to " });
+    res.status(500).json({ message: "Failed to fetch landlords" });
   }
 };
+
 const getLandlord = async (req, res) => {
   try {
-    res.status(200).json({ message: "" });
+    const { id } = req.params;
+    const found = await landlord.findById(id);
+    if (!found) {
+      return res.status(404).json({ message: "Landlord not found" });
+    }
+    res.status(200).json({ landlord: found });
   } catch (err) {
     console.log(err);
-    res.status(500).json({ message: "Failed to " });
+    res.status(500).json({ message: "Failed to fetch landlord" });
   }
 };
+
 const updateLandlord = async (req, res) => {
   try {
-    res.status(200).json({ message: "" });
+    const { id } = req.params;
+    const { fullname, loginAccess } = req.body;
+
+    const updated = await landlord.findByIdAndUpdate(
+      id,
+      { fullname, loginAccess },
+      { new: true }
+    );
+
+    if (!updated) {
+      return res.status(404).json({ message: "Landlord not found" });
+    }
+
+    if (updated.userId) {
+      const userDoc = await user.findById(updated.userId);
+      if (userDoc) {
+        if (fullname) userDoc.fullname = fullname;
+        if (loginAccess !== undefined) userDoc.loginAccess = loginAccess;
+        await userDoc.save();
+      }
+    }
+
+    res.status(200).json({ message: "Landlord updated", landlord: updated });
   } catch (err) {
     console.log(err);
-    res.status(500).json({ message: "Failed to " });
+    res.status(500).json({ message: "Failed to update landlord" });
   }
 };
+
 const deleteLandlord = async (req, res) => {
   try {
-    res.status(200).json({ message: "" });
+    const { id } = req.params;
+    const found = await landlord.findById(id);
+    if (!found) {
+      return res.status(404).json({ message: "Landlord not found" });
+    }
+
+    if (found.userId) {
+      await user.findByIdAndDelete(found.userId);
+    }
+
+    await landlord.findByIdAndDelete(id);
+
+    res.status(200).json({ message: "Landlord deleted" });
   } catch (err) {
     console.log(err);
-    res.status(500).json({ message: "Failed to " });
+    res.status(500).json({ message: "Failed to delete landlord" });
   }
 };
 
 // ===== CONTRACTORS =====
 const addContractor = async (req, res) => {
   try {
-    res.status(200).json({ message: "" });
+    const { fullname, email, phone, loginAccess, trade } = req.body;
+
+    if (!fullname || !email) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+
+    const newUser = new user({
+      fullname,
+      email,
+      phone,
+      loginAccess,
+      role: "contractor",
+    });
+
+    const savedUser = await newUser.save();
+
+    const newContractor = new contractor({
+      fullname,
+      email,
+      phone,
+      loginAccess,
+      trade,
+      userId: savedUser._id,
+    });
+
+    const savedContractor = await newContractor.save();
+
+    res
+      .status(201)
+      .json({ message: "Contractor created", contractor: savedContractor });
   } catch (err) {
     console.log(err);
-    res.status(500).json({ message: "Failed to " });
+    res.status(500).json({ message: "Failed to create contractor" });
   }
 };
+
 const getContractorList = async (req, res) => {
   try {
-    res.status(200).json({ message: "" });
+    const contractors = await contractor.find();
+    res.status(200).json({ contractors });
   } catch (err) {
     console.log(err);
-    res.status(500).json({ message: "Failed to " });
+    res.status(500).json({ message: "Failed to fetch contractors" });
   }
 };
+
 const getContractor = async (req, res) => {
   try {
-    res.status(200).json({ message: "" });
+    const { id } = req.params;
+    const found = await contractor.findById(id);
+    if (!found) {
+      return res.status(404).json({ message: "Contractor not found" });
+    }
+    res.status(200).json({ contractor: found });
   } catch (err) {
     console.log(err);
-    res.status(500).json({ message: "Failed to " });
+    res.status(500).json({ message: "Failed to fetch contractor" });
   }
 };
+
 const updateContractor = async (req, res) => {
   try {
-    res.status(200).json({ message: "" });
+    const { id } = req.params;
+    const { fullname, loginAccess, trade } = req.body;
+
+    const updated = await contractor.findByIdAndUpdate(
+      id,
+      { fullname, loginAccess, trade },
+      { new: true }
+    );
+
+    if (!updated) {
+      return res.status(404).json({ message: "Contractor not found" });
+    }
+
+    if (updated.userId) {
+      const userDoc = await user.findById(updated.userId);
+      if (userDoc) {
+        if (fullname) userDoc.fullname = fullname;
+        if (loginAccess !== undefined) userDoc.loginAccess = loginAccess;
+        await userDoc.save();
+      }
+    }
+
+    res
+      .status(200)
+      .json({ message: "Contractor updated", contractor: updated });
   } catch (err) {
     console.log(err);
-    res.status(500).json({ message: "Failed to " });
+    res.status(500).json({ message: "Failed to update contractor" });
   }
 };
+
 const deleteContractor = async (req, res) => {
   try {
-    res.status(200).json({ message: "" });
+    const { id } = req.params;
+    const found = await contractor.findById(id);
+    if (!found) {
+      return res.status(404).json({ message: "Contractor not found" });
+    }
+
+    if (found.userId) {
+      await user.findByIdAndDelete(found.userId);
+    }
+
+    await contractor.findByIdAndDelete(id);
+
+    res.status(200).json({ message: "Contractor deleted" });
   } catch (err) {
     console.log(err);
-    res.status(500).json({ message: "Failed to " });
+    res.status(500).json({ message: "Failed to delete contractor" });
   }
 };
 

@@ -1,6 +1,7 @@
 import express from "express";
 const tenantRouter = express.tenantRouter();
-
+import { authenticateUser } from "../middlewares/authMiddleware";
+import { Roles, authorizeRoles } from "../middlewares/authorizeRoles";
 // read job issue
 // See current and past rent statements
 // See due date and amount
@@ -19,42 +20,52 @@ const tenantRouter = express.tenantRouter();
 // Track issue status (Pending → In Progress → Resolved)
 tenantRouter
   .route("/:tenantId/jobs")
-  .get(authenticateUser, getAllJobsForTenant) // View all job requests
-  .post(authenticateUser, createJobForTenant); // Raise a job issue
+  .get(authenticateUser, authorizeRoles(Roles.TENANT), getAllJobsForTenant) // View all job requests
+  .post(authenticateUser, authorizeRoles(Roles.TENANT), createJobForTenant); // Raise a job issue
 
 tenantRouter
   .route("/:tenantId/job/:jobId")
-  .get(authenticateUser, getSingleJob) // Get single job
-  .put(authenticateUser, updateJobForTenant); // Optional update
+  .get(authenticateUser, authorizeRoles(Roles.TENANT), getSingleJob) // Get single job
+  .put(authenticateUser, authorizeRoles(Roles.TENANT), updateJobForTenant); // Optional update
 
 tenantRouter
   .route("/:tenantId/job/:jobId/attachments")
-  .post(authenticateUser, uploadJobAttachments); // Add photos/videos
+  .post(authenticateUser, authorizeRoles(Roles.TENANT), uploadJobAttachments); // Add photos/videos
 
 tenantRouter
   .route("/:tenantId/job/:jobId/status")
-  .get(authenticateUser, getJobStatus); // Track job status
+  .get(authenticateUser, authorizeRoles(Roles.TENANT), getJobStatus); // Track job status
 
 tenantRouter
   .route("/:tenantId/rent-statements")
-  .get(authenticateUser, getRentStatements);
+  .get(authenticateUser, authorizeRoles(Roles.TENANT), getRentStatements);
 
-tenantRouter.route("/:tenantId/rent-due").get(authenticateUser, getRentDueInfo);
+tenantRouter
+  .route("/:tenantId/rent-due")
+  .get(authenticateUser, authorizeRoles(Roles.TENANT), getRentDueInfo);
 
 tenantRouter
   .route("/:tenantId/pay-rent")
-  .post(authenticateUser, initiateRentPayment);
+  .post(authenticateUser, authorizeRoles(Roles.TENANT), initiateRentPayment);
 
 tenantRouter
   .route("/:tenantId/maintenance-deductions")
-  .get(authenticateUser, getMaintenanceDeductions);
+  .get(
+    authenticateUser,
+    authorizeRoles(Roles.TENANT),
+    getMaintenanceDeductions
+  );
 
 tenantRouter
   .route("/:tenantId/property")
-  .get(authenticateUser, getTenantPropertyDetails);
+  .get(
+    authenticateUser,
+    authorizeRoles(Roles.TENANT),
+    getTenantPropertyDetails
+  );
 
 tenantRouter
   .route("/:tenantId/lease-details")
-  .get(authenticateUser, getLeaseDetails);
+  .get(authenticateUser, authorizeRoles(Roles.TENANT), getLeaseDetails);
 
 export default tenantRouter;
