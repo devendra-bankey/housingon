@@ -6,7 +6,7 @@ const getAccessToken = (user) => {
   return jwt.sign(
     { id: user._id, userType: user.userType },
     process.env.ACCESS_TOKEN_SECRET,
-    { expiresIn: "59m" }
+    { expiresIn: "1d" }
   );
   0;
 };
@@ -24,14 +24,29 @@ const loginUser = async (req, res) => {
     const currentUser = await user.findOne({ email });
     if (!currentUser)
       return res.status(404).json({ message: "User not Found" });
-    const isMatch = currentUser.matchPassword(password);
-    if (!isMatch) res.status(401).json({ message: "Invalid Credentials" });
+    const isMatch = await currentUser.matchPassword(password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Invalid Credentials" });
+    }
     const accessKey = getAccessToken(currentUser);
     const refreshKey = getRefreshToken(currentUser);
     currentUser.accessKey = accessKey;
     currentUser.refreshKey = refreshKey;
     await currentUser.save();
-    res.status(200).json({
+    // sending token via cookie automatically attach token to fe request
+    res.cookie("accessToken", accessKey, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // use HTTPS only in production
+      sameSite: "strict",
+      maxAge: 24 * 60 * 60 * 1000, // 1 day
+    });
+    res.cookie("refreshToken", refreshKey, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // use HTTPS only in production
+      sameSite: "strict",
+      maxAge: 24 * 60 * 60 * 1000 * 7, // 7 day
+    });
+    return res.status(200).json({
       message: "Login Success",
       user: {
         id: currentUser._id,
@@ -64,7 +79,7 @@ const registerUser = async (req, res) => {
       userType,
     });
     await newUser.save();
-    res.status(201).json({
+    return res.status(201).json({
       message: "Registration successful",
       user: {
         id: newUser._id,
@@ -124,12 +139,26 @@ const forgetPassword = async (req, res) => {
 
 const logoutUser = async (req, res) => {
   try {
+    const currentUser = await user.findById(req.user.id); //`authenticateUser` middleware adds req.use
     if (!currentUser) {
       return res.status(404).json({ message: "User not found" });
     }
+
     currentUser.accessKey = null;
     currentUser.refreshKey = null;
     await currentUser.save();
+
+    res.clearCookie("accessToken", {
+      httpOnly: true,
+      sameSite: "strict",
+      secure: process.env.NODE_ENV === "production",
+    });
+
+    res.clearCookie("refreshToken", {
+      httpOnly: true,
+      sameSite: "strict",
+      secure: process.env.NODE_ENV === "production",
+    });
 
     return res.status(200).json({ message: "Logout successful" });
   } catch (err) {
