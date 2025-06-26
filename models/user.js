@@ -18,7 +18,7 @@ const UserSchema = new Schema({
   },
   userType: {
     type: String,
-    enum: ["1", "2", "3", "4"], // 1.Property manager, 2.Contractor, 3.Tenant, 4.Landlord
+    enum: ["1", "2", "3", "4"], // 1.Property manager(admin), 2.Contractor, 3.Tenant, 4.Landlord
   },
   accessKey: {
     type: String,
@@ -41,7 +41,7 @@ UserSchema.pre("save", async function (next) {
 });
 
 UserSchema.methods.matchPassword = async function (enteredPasswrod) {
-  return await bcrypt.compare(this.password, enteredPasswrod);
+  return await bcrypt.compare(enteredPasswrod, this.password);
 };
 export default mongoose.model("User", UserSchema);
 // default se bhejte hai to kisi bhi naam se import kr skte hai lekin default nhi lgya to vhai naam se import karne padega

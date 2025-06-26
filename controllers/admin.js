@@ -246,7 +246,7 @@ const addContractor = async (req, res) => {
       fullname,
       email,
       phone,
-      loginAccess,
+      // loginAccess,
       trade,
       userId: savedUser._id,
     });
